@@ -122,8 +122,54 @@ public class Arrays
 		return mapped;
 	}
 
+	/**
+	 * Casts the input array to the given type. If the original type is a primitive (More formally, for arrays where {@code data.getClass().getComponentType().isPrimitive()} is {@code true}),
+	 * this method will first create a copy of the original array as an {@code Object[]} and then perform the actual cast.
+	 *
+	 * @param <T> Input array type
+	 * @param <R> Target array type
+	 *
+	 * @param data Input array
+	 * @param type Target type
+	 *
+	 * @return The input array, casted to the target type
+	 */
+	public static <T, R> R[] cast(
+		@NotNull T[] data,
+		@NotNull Class<? extends R[]> type
+	) {
+		Objects.requireNonNull(data);
+		Objects.requireNonNull(type);
+
+		if (data.getClass().isPrimitive())
+		{
+			return type.cast(copyPrimitiveArrayToObjectArray(data));
+		}
+
+		return type.cast(data);
+	}
+
+	public static <T> Object[] copyPrimitiveArrayToObjectArray(
+		@NotNull T[] data
+	) {
+		Objects.requireNonNull(data);
+
+		if (!data.getClass().getComponentType().isPrimitive())
+		{
+			throw new IllegalArgumentException();
+		}
+
+		Object[] newData = new Object[data.length];
+		for (int i = 0; i < data.length; i++)
+		{
+			newData[i] = data[i];
+		}
+
+		return newData;
+	}
+
 	@SuppressWarnings("unchecked")
-	public <T> T[] copyOf(
+	public static <T> T[] copyOf(
 		@NotNull T[] data,
 		@Positive int length,
 		@Nullable T defaultValue

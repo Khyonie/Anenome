@@ -118,4 +118,9 @@ public class ArrayIterator<T> implements Iterator<T>
 
 		return --index;
 	}
+
+	public T[] getBacking()
+	{
+		return this.data;
+	}
 }

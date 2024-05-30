@@ -1,10 +1,10 @@
+# Project automatically converted from an existing Wisteria 1.x.x project
+# For more configuration options, see the Wisteria wiki
 [project]
 name = "Anenome"
-libraries = ["lib/"]
 
 [task]
 
-[task.main]
-source = "src/"
-output = ["target/{NAME}/{NAME}.jar"]
-input = []
+[task_main]
+output = ["target/{TASK_NAME}/{PROJECT_NAME}.jar"]
+source = ["src/"]
