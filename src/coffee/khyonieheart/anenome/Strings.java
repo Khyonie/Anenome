@@ -10,12 +10,63 @@ import java.util.regex.Pattern;
 import coffee.khyonieheart.anenome.exception.StringFormatException;
 
 /**
- * String formatting and printing from Rust.
+ * String utilities.
  */
 public class Strings
 {
 	private static Pattern pattern = Pattern.compile("\\{(.*?)\\}");
 	private static Pattern formatPattern = Pattern.compile("(\\d+)|(.*)([<>^])(\\d+)");
+
+	/**
+	 * Calculates the Levenshtein distance (sometimes called the "edit distance") between two strings.
+	 *
+	 * @param stringA String A
+	 * @param stringB String B
+	 *
+	 * @return The Levenshtein distance between A and B
+	 */
+	public static int levenshtein(
+		@NotNull String stringA,
+		@NotNull String stringB
+	) {
+		Objects.requireNonNull(stringA);
+		Objects.requireNonNull(stringB);
+
+		int[][] distances = new int[stringB.length() + 1][stringA.length() + 1];
+
+		// Initialize empty sections
+		for (int i = 0; i < stringA.length(); i++)
+		{
+			distances[0][i] = i;
+		}
+
+		for (int i = 1; i < stringB.length(); i++)
+		{
+			distances[i][0] = i; 
+		}
+
+		// Compute
+		int cost = 0;
+		for (int b = 1; b < stringB.length() + 1; b++)
+		{
+			for (int a = 1; a < stringA.length() + 1; a++)
+			{
+				cost = 0;
+				if (stringA.charAt(a - 1) != stringB.charAt(b - 1))
+				{
+					cost = 1;
+				}
+
+				distances[b][a] = Arrays.minArray(
+					distances[b - 1][a] + 1,
+					distances[b][a - 1] + 1,
+					distances[b - 1][a - 1] + cost
+				);
+			}
+		}
+
+		return distances[stringB.length()][stringA.length()];
+	}
 
 	/**
 	 * Formats a string using the given format.
@@ -31,6 +82,11 @@ public class Strings
 	) {
 		Objects.requireNonNull(format);
 		Objects.requireNonNull(parameters);
+
+		if (parameters.length == 0)
+		{
+			return format;
+		}
 
 		Matcher matcher = pattern.matcher(format);
 
@@ -117,7 +173,6 @@ public class Strings
 
 			if (format.isBlank())
 			{
-				obj = formatIterator.next();
 				return obj == null ? "null" : obj.toString();
 			}
 

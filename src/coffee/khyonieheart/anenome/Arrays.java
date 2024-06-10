@@ -6,6 +6,9 @@
 package coffee.khyonieheart.anenome;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -14,6 +17,19 @@ import java.util.function.Function;
  */
 public class Arrays
 {
+	public static int minArray(
+		int... values
+	) {
+		int min = Integer.MAX_VALUE;
+
+		for (int i : values)
+		{
+			min = Math.min(min, i);
+		}
+
+		return min;
+	}
+
 	/**
 	 * Converts an array into a string, using either the provided mapper or {@link Object#toString()} and seperating elements with the given delimiter.
 	 *
@@ -41,7 +57,7 @@ public class Arrays
 			while (iter.hasNext())
 			{
 				T next = iter.next();
-				builder.append(next == null ? "null" : mapper.apply(iter.next()));
+				builder.append(next == null ? "null" : mapper.apply(next));
 
 				if (iter.hasNext())
 				{
@@ -147,6 +163,43 @@ public class Arrays
 		}
 
 		return type.cast(data);
+	}
+
+	public static <T> ArrayList<T> toArrayList(
+		@NotNull T[] data
+	) {
+		Objects.requireNonNull(data);
+
+		if (data.length == 0)
+		{
+			return new ArrayList<>();
+		}
+
+		ArrayList<T> list = new ArrayList<>(data.length);
+
+		for (int i = 0; i < data.length; i++)
+		{
+			list.add(i, data[i]);
+		}
+
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T[] toArray(
+		@NotNull Class<T> type,
+		@NotNull Collection<T> data
+	) {
+		T[] array = (T[]) Array.newInstance(type, data.size());
+
+		int index = 0;
+		Iterator<T> iter = data.iterator();
+		while (iter.hasNext())
+		{
+			array[index++] = iter.next();
+		}
+
+		return array;
 	}
 
 	public static <T> Object[] copyPrimitiveArrayToObjectArray(

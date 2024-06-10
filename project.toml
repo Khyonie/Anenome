@@ -8,3 +8,4 @@ name = "Anenome"
 [task_main]
 output = ["target/{TASK_NAME}/{PROJECT_NAME}.jar"]
 source = ["src/"]
+entry = "coffee.khyonieheart.anenome.TestApp"
